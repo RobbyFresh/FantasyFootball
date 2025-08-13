@@ -21,6 +21,7 @@ function App() {
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
 
   const positionOrder = { 'QB': 1, 'RB': 2, 'WR': 3, 'TE': 4, 'K': 5, 'DEF': 6 };
+  const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:5000';
 
   useEffect(() => {
     const fetchPlayers = async () => {
@@ -37,7 +38,7 @@ function App() {
       });
 
       try {
-        const response = await fetch(`http://127.0.0.1:5000/api/players?${params.toString()}`);
+        const response = await fetch(`${API_URL}/api/players?${params.toString()}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -82,7 +83,7 @@ function App() {
     setSelectedPlayer(player);
     setIsLoadingDetails(true);
     try {
-      const response = await fetch(`http://127.0.0.1:5000/api/player/${player.PlayerID}`);
+      const response = await fetch(`${API_URL}/api/player/${player.PlayerID}`);
       const data = await response.json();
       if (data.status === 'success') {
         setPlayerDetails(data.data);

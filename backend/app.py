@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from data_source import get_all_players, get_all_player_projections, get_all_player_stats, get_player_news
@@ -125,4 +126,5 @@ def player_details(player_id):
 
 if __name__ == '__main__':
     get_player_data()
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
