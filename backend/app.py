@@ -127,4 +127,5 @@ def player_details(player_id):
 if __name__ == '__main__':
     get_player_data()
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    # Set debug=False for production
+    app.run(host='0.0.0.0', port=port, debug=False)

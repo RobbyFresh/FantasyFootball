@@ -59,7 +59,7 @@ To deploy this application, you can use services like Render for the backend and
 2.  Create a new "Web Service" on Render and connect it to your GitHub repository.
 3.  Set the "Root Directory" to `backend`.
 4.  Render should automatically detect the `requirements.txt` and use `pip install -r requirements.txt` as the build command.
-5.  Set the "Start Command" to `python app.py`.
+5.  Set the "Start Command" to `gunicorn --workers 4 --bind 0.0.0.0:$PORT app:app`.
 6.  Go to the "Environment" tab and add a new "Secret File".
 7.  Set the filename to `.env`.
 8.  In the content, add your API key: `API_KEY=your_sportsdata_api_key_here`

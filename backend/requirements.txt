@@ -7,3 +7,5 @@ lxml
 Flask
 Flask-Cors
 python-dotenv
+
+gunicorn
