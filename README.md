@@ -41,13 +41,27 @@ This application uses the [SportsData.io](https://sportsdata.io/nfl-api) to fetc
    ```
 2. Install the required dependencies:
     ```bash
-    npm install
+    yarn install
     ```
 3. Run the application:
     ```bash
-    npm start
+    yarn start
     ```
 4. The application will open in your browser at `http://localhost:3000`.
+
+### Running Locally
+
+#### Backend
+1.  Navigate to the `backend` directory.
+2.  Run `pip install -r requirements.txt` to install dependencies.
+3.  Create a `.env` file and add your `API_KEY`.
+4.  Run `python app.py`.
+
+#### Frontend
+1.  Navigate to the `frontend` directory.
+2.  Run `yarn install` to install dependencies.
+3.  Run `yarn start`.
+4.  The application will open in your browser at `http://localhost:3000`.
 
 ### Deployment
 
@@ -70,7 +84,7 @@ To deploy this application, you can use services like Render for the backend and
 1.  Push your code to the same GitHub repository.
 2.  Create a new "Project" on Vercel and connect it to your GitHub repository.
 3.  Set the "Root Directory" to `frontend`.
-4.  Vercel should automatically detect that it's a React application and configure the build settings.
+4.  Vercel will automatically detect `yarn.lock` and use the correct build settings. If you have any issues, ensure the build command is `yarn build`.
 5.  Go to the project "Settings" and navigate to "Environment Variables".
 6.  Add a new environment variable:
     *   **Name:** `REACT_APP_API_URL`
