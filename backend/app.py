@@ -1,4 +1,5 @@
 import os
+import requests
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from data_source import get_all_players, get_all_player_projections, get_all_player_stats, get_player_news
@@ -10,6 +11,26 @@ CORS(app)
 
 # In-memory cache for player data to avoid repeated API calls
 player_cache = None
+sleeper_player_map = None
+
+def get_sleeper_players():
+    """Fetches all NFL players from Sleeper API."""
+    global sleeper_player_map
+    if sleeper_player_map is None:
+        print("Fetching and caching Sleeper player data...")
+        try:
+            response = requests.get("https://api.sleeper.app/v1/players/nfl")
+            response.raise_for_status()
+            sleeper_players = response.json()
+            # Create a map for easy lookup: full_name -> espn_id
+            sleeper_player_map = {
+                f"{p.get('first_name', '')} {p.get('last_name', '')}".lower().strip(): p.get('espn_id')
+                for _, p in sleeper_players.items() if p.get('espn_id')
+            }
+        except requests.exceptions.RequestException as e:
+            print(f"Error fetching Sleeper data: {e}")
+            sleeper_player_map = {} # Avoid refetching on error
+    return sleeper_player_map
 
 def get_player_data():
     """Fetches and caches player data."""
@@ -19,18 +40,24 @@ def get_player_data():
         players = get_all_players()
         stats = get_all_player_stats("2024")
         projections = get_all_player_projections("2025")
+        sleeper_map = get_sleeper_players()
         
         stats_map = {s['PlayerID']: s for s in stats}
         projections_map = {p['PlayerID']: p for p in projections}
         
-        player_cache = [
-            {
+        player_cache = []
+        for player in players:
+            player_name_lower = player.get('Name', '').lower().strip()
+            espn_id = sleeper_map.get(player_name_lower)
+            
+            player_data = {
                 **player, 
+                'espn_id': espn_id,
                 'Stats': stats_map.get(player['PlayerID'], {}),
                 'Projections': projections_map.get(player['PlayerID'], {})
             }
-            for player in players
-        ]
+            player_cache.append(player_data)
+
     return player_cache
 
 @app.route('/api/players')
@@ -125,6 +152,7 @@ def player_details(player_id):
         return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == '__main__':
+    get_sleeper_players()
     get_player_data()
     port = int(os.environ.get("PORT", 5000))
     # Set debug=False for production

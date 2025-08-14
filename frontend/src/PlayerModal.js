@@ -10,7 +10,7 @@ function PlayerModal({ player, details, isLoading, onClose, onDraft, onImageErro
         <button className="close-button" onClick={onClose}>X</button>
         <div className="modal-header">
           <img 
-            src={player.PhotoUrl} 
+            src={player.espn_id ? `https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png` : player.PhotoUrl} 
             alt={player.Name} 
             className="modal-headshot"
             onError={onImageError}

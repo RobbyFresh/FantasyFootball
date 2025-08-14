@@ -173,7 +173,7 @@ function App() {
                       <td>
                           <div style={{ display: 'flex', alignItems: 'center' }}>
                               <img 
-                                  src={player.PhotoUrl} 
+                                  src={player.espn_id ? `https://a.espncdn.com/i/headshots/nfl/players/full/${player.espn_id}.png` : player.PhotoUrl} 
                                   alt={player.Name} 
                                   className="player-headshot"
                                   onError={handleImageError}
